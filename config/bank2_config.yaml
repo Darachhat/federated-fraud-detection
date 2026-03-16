@@ -1,0 +1,18 @@
+# Bank 2 — Retail / Blind Spot Client Configuration
+client:
+  bank_id: "bank2"
+  profile: "retail_blind_spot"
+  terminal_id: 2
+
+data:
+  train_path: "data/processed/bank2_train.csv"
+  test_path: "data/processed/bank2_test.csv"
+  global_test_path: "data/processed/global_test.csv"
+
+partitioning:
+  strategy: "retail"
+  transaction_types:
+    - "PAYMENT"
+    - "CASH_IN"
+  fraud_enrichment: false
+  min_fraud_ratio: 0.0            # Zero fraud labels by design

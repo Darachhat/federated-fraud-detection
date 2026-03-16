@@ -1,0 +1,18 @@
+# Bank 1 — High-Risk Client Configuration
+client:
+  bank_id: "bank1"
+  profile: "high_risk"
+  terminal_id: 1
+
+data:
+  train_path: "data/processed/bank1_train.csv"
+  test_path: "data/processed/bank1_test.csv"
+  global_test_path: "data/processed/global_test.csv"
+
+partitioning:
+  strategy: "high_risk"
+  transaction_types:
+    - "TRANSFER"
+    - "CASH_OUT"
+  fraud_enrichment: true
+  min_fraud_ratio: 0.005

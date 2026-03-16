@@ -1,0 +1,49 @@
+# ============================================================
+# Base Configuration — Federated Fraud Detection Framework
+# ============================================================
+
+project:
+  name: "federated-fraud-detection"
+  version: "1.0.0"
+  seed: 42
+
+data:
+  raw_path: "data/raw/paysim.csv"
+  processed_path: "data/processed/"
+  partition_path: "data/partitions/"
+  test_size: 0.20
+  stratify: true
+
+xgboost:
+  n_estimators: 100
+  max_depth: 6
+  learning_rate: 0.1
+  scale_pos_weight: 773
+  eval_metric: "aucpr"
+  use_label_encoder: false
+  random_state: 42
+  n_jobs: -1
+
+federated:
+  num_rounds: 5
+  num_clients: 3
+  exchange_dir: "models/exchange/"
+  global_model_dir: "models/global/"
+  local_model_dir: "models/local/"
+  round_timeout_seconds: 300       # Max wait time per round per client
+
+evaluation:
+  threshold: 0.5
+  primary_metrics:
+    - "auprc"
+    - "f1_score"
+  excluded_metrics:
+    - "accuracy"                   # Excluded: misleading under 0.13% imbalance
+
+logging:
+  log_dir: "logs/"
+  level: "INFO"
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name} | {message}"
+
+results:
+  output_dir: "experiments/results/"

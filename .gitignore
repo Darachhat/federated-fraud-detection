@@ -1,0 +1,54 @@
+# Data — never commit raw or processed data
+data/raw/
+data/processed/
+data/partitions/
+
+# Models — never commit trained model files
+models/
+
+# Logs
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+venv/
+env/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Results — optional: remove if you want to track results
+experiments/results/
+```
+
+---
+
+## How to Run — 4 Terminal Workflow
+```
+Terminal 0          Terminal 1          Terminal 2          Terminal 3
+─────────────       ─────────────       ─────────────       ─────────────
+run_server.py       run_client.py       run_client.py       run_client.py
+                    --bank bank1        --bank bank2        --bank bank3
+
+    │                    │                   │                   │
+    │◄────── bank1_round_1.json ─────────────┘                   │
+    │◄────── bank2_round_1.json ─────────────────────────────────┘
+    │◄────── bank3_round_1.json ─────────────────────────────────┘
+    │
+    │── JSON Tree Concatenation Algorithm ──►
+    │
+    │──── global_model_round_1.json ────────►│───────────────────►
+    │                                        │                   │
+    [Repeat for Rounds 2 → 5]

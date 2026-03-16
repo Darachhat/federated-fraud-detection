@@ -1,0 +1,21 @@
+# Bank 3 — Mixed Profile Client Configuration
+client:
+  bank_id: "bank3"
+  profile: "mixed"
+  terminal_id: 3
+
+data:
+  train_path: "data/processed/bank3_train.csv"
+  test_path: "data/processed/bank3_test.csv"
+  global_test_path: "data/processed/global_test.csv"
+
+partitioning:
+  strategy: "mixed"
+  transaction_types:
+    - "TRANSFER"
+    - "CASH_OUT"
+    - "DEBIT"
+    - "PAYMENT"
+    - "CASH_IN"
+  fraud_enrichment: false
+  min_fraud_ratio: 0.001
