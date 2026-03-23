@@ -1,0 +1,19 @@
+Bank,Round,AUPRC,F1-Score,Precision,Recall,Condition
+Bank 1 (High-Risk),0,0.9343,0.0541,0.0278,0.9976,Local-Only
+Bank 1 (High-Risk),1,0.9830,0.8430,0.7329,0.9921,Federated
+Bank 1 (High-Risk),2,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 1 (High-Risk),3,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 1 (High-Risk),4,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 1 (High-Risk),5,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 2 (Retail/Blind Spot),0,0.5006,0.0000,0.0000,0.0000,Local-Only
+Bank 2 (Retail/Blind Spot),1,0.9830,0.8430,0.7329,0.9921,Federated
+Bank 2 (Retail/Blind Spot),2,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 2 (Retail/Blind Spot),3,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 2 (Retail/Blind Spot),4,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 2 (Retail/Blind Spot),5,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 3 (Mixed),0,0.9932,0.6556,0.4884,0.9970,Local-Only
+Bank 3 (Mixed),1,0.9830,0.8430,0.7329,0.9921,Federated
+Bank 3 (Mixed),2,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 3 (Mixed),3,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 3 (Mixed),4,0.9830,0.8526,0.7482,0.9909,Federated
+Bank 3 (Mixed),5,0.9830,0.8526,0.7482,0.9909,Federated

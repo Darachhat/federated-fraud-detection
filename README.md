@@ -122,7 +122,7 @@ federated-fraud-detection/
 
 ---
 
-## Federated Learning Architecture Diagram
+## Federated Learning Architecture Diagr`am
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     FEDERATED ROUND N                           │
@@ -167,8 +167,10 @@ cd federated-fraud-detection
 
 # 2. Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate          # macOS / Linux
-venv\Scripts\activate             # Windows
+# macOS / Linux
+source venv/bin/activate 
+# Windows         
+venv\Scripts\activate             
 
 # 3. Install as editable package
 pip install -e .

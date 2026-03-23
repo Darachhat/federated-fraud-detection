@@ -98,19 +98,10 @@ class JSONTreeConcatenator:
         concatenated_trees: List[Dict],
         output_path: str
     ) -> None:
-        """
-        Inject the concatenated tree list into a base model
-        structure and save the federated global model.
-
-        Args:
-            base_model_path:    Path to any client model used
-                                as the structural template.
-            concatenated_trees: Output of concatenate().
-            output_path:        Destination path for the
-                                federated global model JSON.
-        """
         with open(base_model_path, "r") as f:
             fed_model = json.load(f)
+
+        num_trees = len(concatenated_trees)
 
         # Inject concatenated trees
         (
@@ -120,14 +111,31 @@ class JSONTreeConcatenator:
             ["trees"]
         ) = concatenated_trees
 
-        # Update tree count metadata
+        # Update num_trees metadata
         (
             fed_model["learner"]
             ["gradient_booster"]
             ["model"]
             ["gbtree_model_param"]
             ["num_trees"]
-        ) = str(len(concatenated_trees))
+        ) = str(num_trees)
+
+        # tree_info must have exactly num_trees entries.
+        # Each entry is 0 (single output group).
+        (
+            fed_model["learner"]
+            ["gradient_booster"]
+            ["model"]
+            ["tree_info"]
+        ) = [0] * num_trees
+
+        # iteration_indptr tracks cumulative tree counts.
+        (
+            fed_model["learner"]
+            ["gradient_booster"]
+            ["model"]
+            ["iteration_indptr"]
+        ) = list(range(num_trees + 1))
 
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
@@ -136,7 +144,7 @@ class JSONTreeConcatenator:
 
         print(
             f"[AGGREGATOR] Federated model saved → {output_path} "
-            f"({len(concatenated_trees)} trees total)"
+            f"({num_trees} trees total)"
         )
 
     def aggregate(
