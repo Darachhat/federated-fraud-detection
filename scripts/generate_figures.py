@@ -140,96 +140,226 @@ def txt(ax, x, y, s, **kw):
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 1  FL Architecture Diagram
+# FIGURE 1  FL Architecture Diagram (Redesigned)
 # ══════════════════════════════════════════════════════════════
 def fig1():
-    fig, ax = plt.subplots(figsize=(14, 8))
-    ax.set_xlim(0, 14); ax.set_ylim(0, 8)
+    fig, ax = plt.subplots(figsize=(16, 11))
+    ax.set_xlim(0, 16); ax.set_ylim(0, 11)
     ax.axis('off'); ax.set_facecolor('white')
     fig.patch.set_facecolor('white')
 
-    # Left banks
-    bank_specs = [
-        (0.3, 5.6, '#1565C0', 'BANK 1',
-         'High-Risk',
-         '1,064,011 records  |  3,077 fraud (0.2892%)'),
-        (0.3, 3.2, '#B71C1C', 'BANK 2',
-         'Retail / Blind Spot',
-         '2,272,208 records  |  0 fraud (0.0000%)'),
-        (0.3, 0.8, '#1B5E20', 'BANK 3',
-         'Mixed Profile',
-         '735,859 records  |  2,129 fraud (0.2893%)'),
+    # ── COLOR PALETTE ──────────────────────────────────────────
+    C_B1     = '#1565C0'   # Bank 1 blue
+    C_B2     = '#B71C1C'   # Bank 2 red
+    C_B3     = '#1B5E20'   # Bank 3 green
+    C_SRV    = '#263238'   # Server dark
+    C_SRV2   = '#37474F'   # Server lighter
+    C_GOLD   = '#FFD54F'   # Accent gold
+    C_PRIV   = '#E8F5E9'   # Privacy banner bg
+    C_ARROW  = '#546E7A'   # Neutral arrows
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  ROW 1: CLIENT BANKS — Local Data (top)                 ║
+    # ╚══════════════════════════════════════════════════════════╝
+    bank_data = [
+        (0.4,  C_B1, 'BANK 1', 'High-Risk',
+         'TRANSFER + CASH_OUT',
+         '1,064,011 records', '3,077 fraud (0.29%)'),
+        (5.6,  C_B2, 'BANK 2', 'Retail / Blind Spot',
+         'PAYMENT + CASH_IN',
+         '2,272,208 records', '0 fraud (0.00%)'),
+        (10.8, C_B3, 'BANK 3', 'Mixed',
+         'All remaining types',
+         '735,859 records', '2,129 fraud (0.29%)'),
     ]
-    for x, y, col, title, sub, info in bank_specs:
-        rbox(ax, x, y, 3.2, 1.8, col)
-        txt(ax, x+1.6, y+1.40, title,
+
+    for bx, col, name, profile, types, records, fraud_info in bank_data:
+        # Main bank card
+        rbox(ax, bx, 7.8, 4.8, 2.7, col, ec='white', lw=2.5, r=0.20)
+
+        # Bank icon circle
+        circle = plt.Circle((bx+0.55, 9.85), 0.32,
+                             color='white', alpha=0.25, lw=0)
+        ax.add_patch(circle)
+        txt(ax, bx+0.55, 9.85, '[B]',
             fontsize=11, fontweight='bold', color='white')
-        txt(ax, x+1.6, y+0.98, sub,
-            fontsize=9.5, color='white', alpha=0.95)
-        txt(ax, x+1.6, y+0.46, info,
-            fontsize=8, color='white', alpha=0.88)
 
-    # Global server box
-    rbox(ax, 5.2, 2.4, 3.6, 3.2, '#37474F')
-    txt(ax, 7.0, 5.15, 'GLOBAL SERVER',
-        fontsize=12, fontweight='bold', color='white')
-    txt(ax, 7.0, 4.62, 'JSON Tree Concatenation',
-        fontsize=10, color='white', alpha=0.95)
-    txt(ax, 7.0, 4.18, 'Algorithm',
-        fontsize=10, color='white', alpha=0.95)
-    txt(ax, 7.0, 3.55, 'y-hat = Sum fk(x)',
-        fontsize=12, color='#FFD54F',
-        fontstyle='italic', fontweight='bold')
-    txt(ax, 7.0, 2.75, '5 Communication Rounds',
-        fontsize=8.5, color='white', alpha=0.85)
+        # Bank name
+        txt(ax, bx+2.4, 10.05, name,
+            fontsize=14, fontweight='bold', color='white')
+        # Profile subtitle
+        txt(ax, bx+2.4, 9.58, profile,
+            fontsize=10, color='white', alpha=0.92)
 
-    # Right (federated) banks
-    fed_specs = [
-        (10.5, 5.6, '#1565C0', 'BANK 1',
-         'Federated Model',
-         'AUPRC = 0.9830  |  F1 = 0.8526'),
-        (10.5, 3.2, '#B71C1C', 'BANK 2',
-         'Federated Model',
-         'AUPRC = 0.9830  |  F1 = 0.8526'),
-        (10.5, 0.8, '#1B5E20', 'BANK 3',
-         'Federated Model',
-         'AUPRC = 0.9830  |  F1 = 0.8526'),
+        # Divider line
+        ax.plot([bx+0.3, bx+4.5], [9.25, 9.25],
+                color='white', alpha=0.35, lw=1.2)
+
+        # Data details
+        txt(ax, bx+2.4, 8.90, types,
+            fontsize=9, color='white', alpha=0.85)
+        txt(ax, bx+2.4, 8.50, records,
+            fontsize=9.5, color='white', alpha=0.90)
+
+        # Fraud info — highlight Bank 2
+        if '0 fraud' in fraud_info:
+            txt(ax, bx+2.4, 8.10, fraud_info,
+                fontsize=10, fontweight='bold',
+                color=C_GOLD)
+            txt(ax, bx+2.4, 7.95, '^ BLIND SPOT',
+                fontsize=7, fontweight='bold',
+                color=C_GOLD, alpha=0.85)
+        else:
+            txt(ax, bx+2.4, 8.10, fraud_info,
+                fontsize=9.5, color='white', alpha=0.90)
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  ARROWS: Banks → Server (downward)                      ║
+    # ╚══════════════════════════════════════════════════════════╝
+    arrow_down = dict(arrowstyle='->', lw=2.2,
+                      connectionstyle='arc3,rad=0')
+    arrow_locs = [
+        (2.8,  C_B1),   # Bank 1 center x
+        (8.0,  C_B2),   # Bank 2 center x
+        (13.2, C_B3),   # Bank 3 center x
     ]
-    for x, y, col, title, sub, info in fed_specs:
-        rbox(ax, x, y, 3.2, 1.8, col)
-        txt(ax, x+1.6, y+1.40, title,
+    for ax_x, col in arrow_locs:
+        ax.annotate('', xy=(ax_x, 6.55), xytext=(ax_x, 7.75),
+                    arrowprops=dict(**arrow_down, color=col))
+
+    # Arrow labels (left side)
+    txt(ax, 2.8, 7.15, 'JSON trees',
+        fontsize=8.5, color=C_B1, fontweight='bold',
+        fontstyle='italic')
+    txt(ax, 8.0, 7.15, 'JSON trees',
+        fontsize=8.5, color=C_B2, fontweight='bold',
+        fontstyle='italic')
+    txt(ax, 13.2, 7.15, 'JSON trees',
+        fontsize=8.5, color=C_B3, fontweight='bold',
+        fontstyle='italic')
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  ROW 2: GLOBAL SERVER — Aggregation (center)            ║
+    # ╚══════════════════════════════════════════════════════════╝
+    # Server background (full width)
+    rbox(ax, 1.5, 4.4, 13.0, 2.1, C_SRV,
+         ec='white', lw=2.5, alpha=0.95, r=0.18)
+
+    # Server icon
+    circle_s = plt.Circle((3.0, 5.45), 0.38,
+                           color=C_GOLD, alpha=0.30, lw=0)
+    ax.add_patch(circle_s)
+    txt(ax, 3.0, 5.45, '[S]',
+        fontsize=14, fontweight='bold', color=C_GOLD)
+
+    # Server title + subtitle
+    txt(ax, 5.5, 5.72, 'GLOBAL SERVER',
+        fontsize=14, fontweight='bold', color='white', ha='left')
+    txt(ax, 5.5, 5.20, 'JSON Tree Concatenation Algorithm',
+        fontsize=11, color='white', alpha=0.92, ha='left')
+
+    # Formula box (right side of server)
+    rbox(ax, 9.8, 4.65, 4.4, 1.6, C_SRV2,
+         ec=C_GOLD, lw=2, alpha=0.95, r=0.14)
+    txt(ax, 12.0, 5.58, 'y-hat = Sum f_k(x)',
+        fontsize=14, color=C_GOLD,
+        fontweight='bold', fontstyle='italic')
+    txt(ax, 12.0, 5.05, 'for k in T1 + T2 + T3',
+        fontsize=10, color='white', alpha=0.85)
+
+    # Round indicator badges
+    for i in range(5):
+        cx = 3.2 + i * 1.3
+        circle_r = plt.Circle((cx, 4.72), 0.22,
+                               color=C_GOLD if i == 0 else 'white',
+                               alpha=0.25, lw=0)
+        ax.add_patch(circle_r)
+        txt(ax, cx, 4.72, f'R{i+1}',
+            fontsize=8, fontweight='bold',
+            color=C_GOLD if i == 0 else 'white',
+            alpha=1.0 if i == 0 else 0.60)
+    txt(ax, 3.2, 4.38, '5 Communication Rounds',
+        fontsize=7.5, color='white', alpha=0.65, ha='left')
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  ARROWS: Server → Results (downward)                    ║
+    # ╚══════════════════════════════════════════════════════════╝
+    arrow_down2 = dict(arrowstyle='->', lw=2.2,
+                       connectionstyle='arc3,rad=0')
+    for ax_x, col in arrow_locs:
+        ax.annotate('', xy=(ax_x, 3.45), xytext=(ax_x, 4.35),
+                    arrowprops=dict(**arrow_down2, color=C_ARROW))
+
+    txt(ax, 2.8, 3.90, 'Global model',
+        fontsize=8, color=C_ARROW, fontstyle='italic')
+    txt(ax, 8.0, 3.90, 'Global model',
+        fontsize=8, color=C_ARROW, fontstyle='italic')
+    txt(ax, 13.2, 3.90, 'Global model',
+        fontsize=8, color=C_ARROW, fontstyle='italic')
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  ROW 3: FEDERATED RESULTS (bottom cards)                ║
+    # ╚══════════════════════════════════════════════════════════╝
+    result_data = [
+        (0.4,  C_B1, 'BANK 1 -- Federated',
+         'AUPRC = 0.9830', 'F1 = 0.8526',
+         'Local: 0.9343 -> 0.9830'),
+        (5.6,  C_B2, 'BANK 2 -- Federated',
+         'AUPRC = 0.9830', 'F1 = 0.8526',
+         'Local: 0.5006 -> 0.9830  [!]'),
+        (10.8, C_B3, 'BANK 3 -- Federated',
+         'AUPRC = 0.9830', 'F1 = 0.8526',
+         'Local: 0.9932 -> 0.9830'),
+    ]
+
+    for rx, col, title, auprc, f1, delta in result_data:
+        rbox(ax, rx, 1.5, 4.8, 1.9, col,
+             ec='white', lw=2.5, alpha=0.88, r=0.18)
+        txt(ax, rx+2.4, 3.05, title,
             fontsize=11, fontweight='bold', color='white')
-        txt(ax, x+1.6, y+0.98, sub,
-            fontsize=9.5, color='white', alpha=0.95)
-        txt(ax, x+1.6, y+0.46, info,
-            fontsize=9, color='#FFD54F', fontweight='bold')
 
-    aw = dict(arrowstyle='->', lw=2.0,
-              connectionstyle='arc3,rad=0')
-    for (_, y, col, _, _, _), ty in zip(bank_specs, [6.5, 4.1, 1.7]):
-        ax.annotate('', xy=(5.2, ty), xytext=(3.5, ty),
-                    arrowprops=dict(**aw, color=col))
-        txt(ax, 4.35, ty+0.18, 'JSON trees\n(no raw data)',
-            fontsize=7.5, color=col, fontstyle='italic')
+        # Metrics row
+        txt(ax, rx+1.4, 2.50, auprc,
+            fontsize=11, fontweight='bold', color=C_GOLD, ha='left')
+        txt(ax, rx+3.4, 2.50, f1,
+            fontsize=11, fontweight='bold', color=C_GOLD, ha='left')
 
-    for (_, y, col, _, _, _), ty in zip(fed_specs, [6.5, 4.1, 1.7]):
-        ax.annotate('', xy=(10.5, ty), xytext=(8.8, ty),
-                    arrowprops=dict(**aw, color='#546E7A'))
-        txt(ax, 9.65, ty+0.18, 'Global model',
-            fontsize=7.5, color='#546E7A', fontstyle='italic')
+        # Delta / improvement
+        if '[!]' in delta:
+            txt(ax, rx+2.4, 1.95, delta,
+                fontsize=9, fontweight='bold', color=C_GOLD)
+            txt(ax, rx+2.4, 1.65, 'Blind Spot Resolved in Round 1',
+                fontsize=7.5, fontweight='bold', color='white',
+                alpha=0.85)
+        else:
+            txt(ax, rx+2.4, 1.85, delta,
+                fontsize=8.5, color='white', alpha=0.80)
 
-    rbox(ax, 0.3, 0.05, 13.4, 0.60,
-         '#E8F5E9', ec='#43A047', lw=2, alpha=1.0, r=0.12)
-    txt(ax, 7.0, 0.35,
-        '[OK]  Privacy Guarantee: No raw transaction data '
-        'transferred between any institution at any stage',
-        fontsize=10, color='#1B5E20', fontweight='bold')
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  PRIVACY GUARANTEE BANNER (bottom)                      ║
+    # ╚══════════════════════════════════════════════════════════╝
+    rbox(ax, 0.4, 0.15, 15.2, 0.95,
+         C_PRIV, ec='#43A047', lw=2.5, alpha=1.0, r=0.12)
 
+    # Shield icon
+    txt(ax, 1.2, 0.62, '[SAFE]',
+        fontsize=10, fontweight='bold', color='#1B5E20')
+
+    txt(ax, 8.3, 0.68,
+        'PRIVACY GUARANTEE',
+        fontsize=12, fontweight='bold', color='#1B5E20')
+    txt(ax, 8.3, 0.32,
+        'No raw transaction data is transferred between any '
+        'institution -- only serialized JSON tree structures '
+        '(split features, thresholds, leaf scores)',
+        fontsize=9, color='#2E7D32')
+
+    # ── Title ──────────────────────────────────────────────────
     ax.set_title(
         'Figure 1: Federated Learning Framework Architecture\n'
-        'JSON Tree Concatenation Algorithm -- '
-        'Three Client Banks + Global Server',
-        fontsize=13, fontweight='bold', pad=14,
+        'JSON Tree Concatenation Algorithm across '
+        '5 Communication Rounds',
+        fontsize=14, fontweight='bold', pad=16,
         fontfamily=FONT_FAMILY)
     save('fig1_fl_architecture')
 
@@ -443,75 +573,211 @@ def fig4():
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 5  JSON Tree Concatenation Algorithm
+# FIGURE 5  JSON Tree Concatenation Algorithm (Redesigned)
 # ══════════════════════════════════════════════════════════════
 def fig5():
-    fig, ax = plt.subplots(figsize=(15, 7))
-    ax.set_xlim(0, 15); ax.set_ylim(0, 7)
+    fig, ax = plt.subplots(figsize=(16, 12))
+    ax.set_xlim(0, 16); ax.set_ylim(0, 12)
     ax.axis('off'); ax.set_facecolor('white')
     fig.patch.set_facecolor('white')
 
-    steps = [
-        (0.4,  '#1565C0', '1',
-         'Step 1: Local Training',
-         'Each bank trains XGBoost\non private local data\n'
-         '(No data leaves institution)'),
-        (4.0,  '#6A1B9A', '2',
-         'Step 2: JSON Serialisation',
-         'model.save_model\n("bank_N.json")\n'
-         '(Tree structures + leaf scores)'),
-        (7.6,  '#E65100', '3',
-         'Step 3: Tree Concatenation\nat Global Server',
-         'Merge tree arrays\nUpdate tree_info,\n'
-         'iteration_indptr, num_trees'),
-        (11.2, '#1B5E20', '4',
-         'Step 4: Global Model\nRedistribution',
-         'Federated model sent\nback to all banks\n'
-         'for next round'),
+    # ── Colors ─────────────────────────────────────────────────
+    C_CLIENT = '#1565C0'   # Client-side blue
+    C_SERVER = '#E65100'   # Server-side orange
+    C_DARK   = '#263238'
+    C_GOLD   = '#FFD54F'
+    C_PRIV   = '#E8F5E9'
+    C_FORM   = '#FFF8E1'
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  SECTION HEADER: CLIENT-SIDE                            ║
+    # ╚══════════════════════════════════════════════════════════╝
+    rbox(ax, 0.3, 10.55, 15.4, 0.55, C_CLIENT,
+         ec='white', lw=2, alpha=0.15, r=0.10)
+    txt(ax, 0.8, 10.82,
+        'CLIENT-SIDE  (Each Bank Independently)',
+        fontsize=11, fontweight='bold', color=C_CLIENT,
+        ha='left')
+
+    # ── STEP 1 ─────────────────────────────────────────────────
+    rbox(ax, 0.5, 8.3, 7.2, 2.1, C_CLIENT,
+         ec='white', lw=2.5, alpha=0.92, r=0.16)
+
+    # Step badge
+    circle1 = plt.Circle((1.2, 9.90), 0.38,
+                          color='white', alpha=0.25, lw=0)
+    ax.add_patch(circle1)
+    txt(ax, 1.2, 9.90, '1',
+        fontsize=16, fontweight='bold', color='white')
+
+    # Step title + description
+    txt(ax, 2.6, 9.95, 'Local Training',
+        fontsize=13, fontweight='bold', color='white', ha='left')
+    txt(ax, 2.6, 9.50, 'Each bank trains XGBoost on private local data',
+        fontsize=9.5, color='white', alpha=0.90, ha='left')
+
+    # Technical detail callout
+    rbox(ax, 0.8, 8.48, 6.6, 0.90, 'white',
+         ec='white', lw=0, alpha=0.15, r=0.10)
+    txt(ax, 4.1, 9.06, 'n_estimators=100  |  max_depth=6',
+        fontsize=9, color='white', alpha=0.85)
+    txt(ax, 4.1, 8.72, 'scale_pos_weight=773  |  eval_metric=aucpr',
+        fontsize=9, color='white', alpha=0.85)
+
+    # ── STEP 2 ─────────────────────────────────────────────────
+    rbox(ax, 8.3, 8.3, 7.2, 2.1, '#0D47A1',
+         ec='white', lw=2.5, alpha=0.92, r=0.16)
+
+    circle2 = plt.Circle((9.0, 9.90), 0.38,
+                          color='white', alpha=0.25, lw=0)
+    ax.add_patch(circle2)
+    txt(ax, 9.0, 9.90, '2',
+        fontsize=16, fontweight='bold', color='white')
+
+    txt(ax, 10.4, 9.95, 'JSON Serialization',
+        fontsize=13, fontweight='bold', color='white', ha='left')
+    txt(ax, 10.4, 9.50, 'XGBoost model saved to JSON format',
+        fontsize=9.5, color='white', alpha=0.90, ha='left')
+
+    rbox(ax, 8.6, 8.48, 6.6, 0.90, 'white',
+         ec='white', lw=0, alpha=0.15, r=0.10)
+    txt(ax, 11.9, 9.06, 'model.save_model("bank_N.json")',
+        fontsize=9.5, color=C_GOLD, fontweight='bold',
+        fontstyle='italic')
+    txt(ax, 11.9, 8.72, 'Encodes: split features, thresholds, leaf scores',
+        fontsize=8.5, color='white', alpha=0.85)
+
+    # Arrow Step 1 -> Step 2
+    ax.annotate('', xy=(8.2, 9.35), xytext=(7.8, 9.35),
+                arrowprops=dict(arrowstyle='->', lw=2.5,
+                                color=C_CLIENT))
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  VERTICAL ARROW: Client -> Server                       ║
+    # ╚══════════════════════════════════════════════════════════╝
+    ax.annotate('', xy=(8.0, 7.05), xytext=(8.0, 8.25),
+                arrowprops=dict(arrowstyle='->', lw=3.0,
+                                color=C_DARK,
+                                connectionstyle='arc3,rad=0'))
+    rbox(ax, 5.8, 7.30, 4.4, 0.72, C_DARK,
+         ec='white', lw=2, alpha=0.92, r=0.12)
+    txt(ax, 8.0, 7.70, 'JSON trees transmitted to server',
+        fontsize=9.5, fontweight='bold', color='white')
+    txt(ax, 8.0, 7.40, '(No raw data leaves any institution)',
+        fontsize=8, color=C_GOLD, fontstyle='italic')
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  SECTION HEADER: SERVER-SIDE                            ║
+    # ╚══════════════════════════════════════════════════════════╝
+    rbox(ax, 0.3, 6.35, 15.4, 0.55, C_SERVER,
+         ec='white', lw=2, alpha=0.15, r=0.10)
+    txt(ax, 0.8, 6.62,
+        'SERVER-SIDE  (Global Server -- Aggregation)',
+        fontsize=11, fontweight='bold', color=C_SERVER,
+        ha='left')
+
+    # ── STEP 3 ─────────────────────────────────────────────────
+    rbox(ax, 0.5, 3.75, 7.2, 2.45, C_SERVER,
+         ec='white', lw=2.5, alpha=0.92, r=0.16)
+
+    circle3 = plt.Circle((1.2, 5.75), 0.38,
+                          color='white', alpha=0.25, lw=0)
+    ax.add_patch(circle3)
+    txt(ax, 1.2, 5.75, '3',
+        fontsize=16, fontweight='bold', color='white')
+
+    txt(ax, 2.6, 5.80, 'Tree Concatenation',
+        fontsize=13, fontweight='bold', color='white', ha='left')
+    txt(ax, 2.6, 5.35, 'Merge tree arrays from all clients',
+        fontsize=9.5, color='white', alpha=0.90, ha='left')
+
+    # Technical details
+    rbox(ax, 0.8, 3.92, 6.6, 1.25, 'white',
+         ec='white', lw=0, alpha=0.15, r=0.10)
+    details_3 = [
+        'trees = T1.trees + T2.trees + T3.trees',
+        'Update: tree_info[ ] array',
+        'Update: iteration_indptr[ ] array',
+        'Update: num_trees = K1 + K2 + K3',
     ]
+    for i, line in enumerate(details_3):
+        txt(ax, 4.1, 4.95 - i*0.28, line,
+            fontsize=8.5, color='white' if i == 0 else 'white',
+            fontweight='bold' if i == 0 else 'normal',
+            alpha=0.95 if i == 0 else 0.80, ha='center')
 
-    for x, col, num, title, desc in steps:
-        rbox(ax, x, 1.5, 3.2, 4.2, col, alpha=0.90, r=0.18)
-        circle = plt.Circle((x+1.6, 5.2), 0.42,
-                             color=col, ec='white', lw=3)
-        ax.add_patch(circle)
-        txt(ax, x+1.6, 5.2, num,
-            fontsize=15, fontweight='bold', color='white',
-            fontfamily=FONT_FAMILY)
-        txt(ax, x+1.6, 4.38, title,
-            fontsize=10.5, fontweight='bold', color='white',
-            fontfamily=FONT_FAMILY)
-        txt(ax, x+1.6, 3.08, desc,
-            fontsize=9, color='white', alpha=0.93,
-            linespacing=1.5, fontfamily=FONT_FAMILY)
-        if x < 11.2:
-            ax.annotate('', xy=(x+3.5, 3.6), xytext=(x+3.2, 3.6),
-                        arrowprops=dict(arrowstyle='->',
-                                        color='#546E7A', lw=2.5))
+    # ── STEP 4 ─────────────────────────────────────────────────
+    rbox(ax, 8.3, 3.75, 7.2, 2.45, '#BF360C',
+         ec='white', lw=2.5, alpha=0.92, r=0.16)
 
-    rbox(ax, 0.4, 0.72, 14.2, 0.62,
-         '#FFF8E1', ec='#F9A825', lw=2, alpha=1.0, r=0.12)
-    txt(ax, 7.5, 1.03,
-        'Theoretical Basis:  y-hat_fed = '
-        'Sum fk(x) for k  in  T1  +  '
-        'Sum fk(x) for k  in  T2  +  '
-        'Sum fk(x) for k  in  T3',
-        fontsize=10.5, color='#E65100', fontweight='bold',
-        fontfamily=FONT_FAMILY)
+    circle4 = plt.Circle((9.0, 5.75), 0.38,
+                          color='white', alpha=0.25, lw=0)
+    ax.add_patch(circle4)
+    txt(ax, 9.0, 5.75, '4',
+        fontsize=16, fontweight='bold', color='white')
 
-    rbox(ax, 0.4, 0.06, 14.2, 0.56,
-         '#E8F5E9', ec='#43A047', lw=2, alpha=1.0, r=0.12)
-    txt(ax, 7.5, 0.34,
-        '[OK]  No raw transaction data transferred at any step -- '
-        'only JSON model files (tree structures + leaf scores)',
-        fontsize=10, color='#1B5E20', fontweight='bold',
-        fontfamily=FONT_FAMILY)
+    txt(ax, 10.4, 5.80, 'Global Model Redistribution',
+        fontsize=13, fontweight='bold', color='white', ha='left')
+    txt(ax, 10.4, 5.35, 'Federated model sent back to all banks',
+        fontsize=9.5, color='white', alpha=0.90, ha='left')
 
+    rbox(ax, 8.6, 3.92, 6.6, 1.25, 'white',
+         ec='white', lw=0, alpha=0.15, r=0.10)
+    details_4 = [
+        'global_model.save_model("federated.json")',
+        'Distributed to Bank 1, Bank 2, Bank 3',
+        'Warm-start for next federation round',
+        'M_fed = T1 + T2 + T3  (300 trees total)',
+    ]
+    for i, line in enumerate(details_4):
+        txt(ax, 11.9, 4.95 - i*0.28, line,
+            fontsize=8.5, color=C_GOLD if i == 0 else 'white',
+            fontweight='bold' if i == 0 else 'normal',
+            alpha=0.95 if i == 0 else 0.80, ha='center')
+
+    # Arrow Step 3 -> Step 4
+    ax.annotate('', xy=(8.2, 5.0), xytext=(7.8, 5.0),
+                arrowprops=dict(arrowstyle='->', lw=2.5,
+                                color=C_SERVER))
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  FORMULA BANNER                                         ║
+    # ╚══════════════════════════════════════════════════════════╝
+    rbox(ax, 0.5, 2.50, 15.0, 1.05, C_FORM,
+         ec='#F9A825', lw=2.5, alpha=1.0, r=0.12)
+    txt(ax, 8.0, 3.20,
+        'Theoretical Basis (Additive Scoring Semantics)',
+        fontsize=10, fontweight='bold', color='#E65100')
+    txt(ax, 8.0, 2.78,
+        'y-hat_fed = Sum f_k(x) for k in T1  +  '
+        'Sum f_k(x) for k in T2  +  '
+        'Sum f_k(x) for k in T3',
+        fontsize=11, fontweight='bold', color=C_DARK,
+        fontstyle='italic')
+
+    # ╔══════════════════════════════════════════════════════════╗
+    # ║  PRIVACY GUARANTEE BANNER                               ║
+    # ╚══════════════════════════════════════════════════════════╝
+    rbox(ax, 0.5, 1.20, 15.0, 1.10, C_PRIV,
+         ec='#43A047', lw=2.5, alpha=1.0, r=0.12)
+    txt(ax, 8.0, 1.95,
+        'PRIVACY GUARANTEE',
+        fontsize=12, fontweight='bold', color='#1B5E20')
+    txt(ax, 8.0, 1.52,
+        'No raw transaction data transferred at any step '
+        '-- only JSON model files',
+        fontsize=9.5, color='#2E7D32')
+    txt(ax, 8.0, 1.28,
+        '(split features, split thresholds, leaf scores, '
+        'tree metadata)',
+        fontsize=8.5, color='#388E3C', fontstyle='italic')
+
+    # ── Title ──────────────────────────────────────────────────
     ax.set_title(
         'Figure 5: JSON Tree Concatenation Algorithm -- '
         'Four-Step Aggregation Process\n'
         'Primary Technical Contribution of this Thesis',
-        fontsize=13, fontweight='bold', pad=12,
+        fontsize=14, fontweight='bold', pad=16,
         fontfamily=FONT_FAMILY)
     save('fig5_algorithm_diagram')
 
