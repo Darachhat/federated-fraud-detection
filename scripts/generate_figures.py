@@ -10,23 +10,23 @@ Usage:
     python scripts/generate_figures.py
 
 Output:
-    notebooks/figures/fig1_1_fl_architecture.png
-    notebooks/figures/fig3_1_class_distribution.png
-    notebooks/figures/fig3_2_amount_distribution.png
-    notebooks/figures/fig3_3_partition_statistics.png
-    notebooks/figures/fig3_4_algorithm_diagram.png
-    notebooks/figures/fig3_5_training_protocol.png
-    notebooks/figures/fig3_6_auprc_concept.png
-    notebooks/figures/fig3_7_accuracy_exclusion.png
-    notebooks/figures/fig4_1_local_only_performance.png
-    notebooks/figures/fig4_2_centralized_pr_curve.png
-    notebooks/figures/fig4_3_auprc_trajectory.png
-    notebooks/figures/fig4_4_f1_trajectory.png
-    notebooks/figures/fig4_5_bank2_recovery.png
-    notebooks/figures/fig4_6_comparative_bar.png
-    notebooks/figures/fig4_7_feature_importance.png
-    notebooks/figures/fig4_8_all_pr_curves.png
-    notebooks/figures/fig5_1_privacy_tax.png
+    notebooks/figures/fig1_fl_architecture.png
+    notebooks/figures/fig2_class_distribution.png
+    notebooks/figures/fig3_amount_distribution.png
+    notebooks/figures/fig4_partition_statistics.png
+    notebooks/figures/fig5_algorithm_diagram.png
+    notebooks/figures/fig6_training_protocol.png
+    notebooks/figures/fig7_auprc_concept.png
+    notebooks/figures/fig8_accuracy_exclusion.png
+    notebooks/figures/fig9_local_only_performance.png
+    notebooks/figures/fig10_centralized_pr_curve.png
+    notebooks/figures/fig11_auprc_trajectory.png
+    notebooks/figures/fig12_f1_trajectory.png
+    notebooks/figures/fig13_bank2_recovery.png
+    notebooks/figures/fig14_comparative_bar.png
+    notebooks/figures/fig15_feature_importance.png
+    notebooks/figures/fig16_all_pr_curves.png
+    notebooks/figures/fig17_privacy_tax.png
 
 Confirmed Experimental Values (run_simulation.py --rounds 5 --seed 42):
     Bank 1 Local-Only : AUPRC=0.9343, F1=0.0541, Prec=0.0278, Rec=0.9976
@@ -140,9 +140,9 @@ def txt(ax, x, y, s, **kw):
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 1.1  FL Architecture Diagram
+# FIGURE 1  FL Architecture Diagram
 # ══════════════════════════════════════════════════════════════
-def fig1_1():
+def fig1():
     fig, ax = plt.subplots(figsize=(14, 8))
     ax.set_xlim(0, 14); ax.set_ylim(0, 8)
     ax.axis('off'); ax.set_facecolor('white')
@@ -226,18 +226,18 @@ def fig1_1():
         fontsize=10, color='#1B5E20', fontweight='bold')
 
     ax.set_title(
-        'Figure 1.1: Federated Learning Framework Architecture\n'
+        'Figure 1: Federated Learning Framework Architecture\n'
         'JSON Tree Concatenation Algorithm -- '
         'Three Client Banks + Global Server',
         fontsize=13, fontweight='bold', pad=14,
         fontfamily=FONT_FAMILY)
-    save('fig1_1_fl_architecture')
+    save('fig1_fl_architecture')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 3.1  Class Distribution
+# FIGURE 2  Class Distribution
 # ══════════════════════════════════════════════════════════════
-def fig3_1():
+def fig2():
     total     = 6_362_620
     fraud     = 8_213
     legit     = total - fraud
@@ -280,17 +280,17 @@ def fig3_1():
     axes[1].set_facecolor('#FAFAFA')
 
     fig.suptitle(
-        'Figure 3.1: PaySim Dataset -- Extreme Class Imbalance\n'
+        'Figure 2: PaySim Dataset -- Extreme Class Imbalance\n'
         'Fraud Prevalence = 0.13%  |  773:1 Imbalance Ratio  |  '
         'Accuracy EXCLUDED throughout this thesis',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
-    save('fig3_1_class_distribution')
+    save('fig2_class_distribution')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 3.2  Amount Distribution Before/After Log
+# FIGURE 3  Amount Distribution Before/After Log
 # ══════════════════════════════════════════════════════════════
-def fig3_2():
+def fig3():
     np.random.seed(42)
     legit_amt = np.concatenate([
         np.random.exponential(scale=45_000, size=75_000),
@@ -340,18 +340,18 @@ def fig3_2():
         axes[1, i].set_facecolor('#FAFAFA')
 
     fig.suptitle(
-        'Figure 3.2: Transaction Amount Distribution -- '
+        'Figure 3: Transaction Amount Distribution -- '
         'Raw vs. Log1p-Transformed\n'
         'Logarithmic transformation normalises right-skewed '
         'distribution for XGBoost training',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
-    save('fig3_2_amount_distribution')
+    save('fig3_amount_distribution')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 3.3  Non-IID Partition Statistics
+# FIGURE 4  Non-IID Partition Statistics
 # ══════════════════════════════════════════════════════════════
-def fig3_3():
+def fig4():
     totals     = [1_064_011, 2_272_208, 735_859]
     frauds     = [3_077, 0, 2_129]
     fraud_pcts = [0.2892, 0.0000, 0.2893]
@@ -434,18 +434,18 @@ def fig3_3():
                 fontfamily=FONT_FAMILY)
 
     fig.suptitle(
-        'Figure 3.3: Non-IID Dataset Partitioning Across '
+        'Figure 4: Non-IID Dataset Partitioning Across '
         'Three Client Banks\n'
         'Bank 2 holds zero fraud labels -- '
         'structural condition causing the Blind Spot Problem',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
-    save('fig3_3_partition_statistics')
+    save('fig4_partition_statistics')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 3.4  JSON Tree Concatenation Algorithm
+# FIGURE 5  JSON Tree Concatenation Algorithm
 # ══════════════════════════════════════════════════════════════
-def fig3_4():
+def fig5():
     fig, ax = plt.subplots(figsize=(15, 7))
     ax.set_xlim(0, 15); ax.set_ylim(0, 7)
     ax.axis('off'); ax.set_facecolor('white')
@@ -508,18 +508,18 @@ def fig3_4():
         fontfamily=FONT_FAMILY)
 
     ax.set_title(
-        'Figure 3.4: JSON Tree Concatenation Algorithm -- '
+        'Figure 5: JSON Tree Concatenation Algorithm -- '
         'Four-Step Aggregation Process\n'
         'Primary Technical Contribution of this Thesis',
         fontsize=13, fontweight='bold', pad=12,
         fontfamily=FONT_FAMILY)
-    save('fig3_4_algorithm_diagram')
+    save('fig5_algorithm_diagram')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 3.5  Federated Training Protocol
+# FIGURE 6  Federated Training Protocol
 # ══════════════════════════════════════════════════════════════
-def fig3_5():
+def fig6():
     fig, ax = plt.subplots(figsize=(14, 8))
     ax.set_xlim(0, 14); ax.set_ylim(0, 8.5)
     ax.axis('off'); ax.set_facecolor('white')
@@ -574,18 +574,18 @@ def fig3_5():
             fontfamily=FONT_FAMILY)
 
     ax.set_title(
-        'Figure 3.5: Federated Training Protocol -- '
+        'Figure 6: Federated Training Protocol -- '
         '5 Communication Rounds\n'
         '4-Terminal Architecture: Global Server + 3 Client Banks',
         fontsize=13, fontweight='bold', pad=12,
         fontfamily=FONT_FAMILY)
-    save('fig3_5_training_protocol')
+    save('fig6_training_protocol')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 3.6  AUPRC Concept
+# FIGURE 7  AUPRC Concept
 # ══════════════════════════════════════════════════════════════
-def fig3_6():
+def fig7():
     fig, ax = plt.subplots(figsize=(10, 7))
     fig.patch.set_facecolor('white')
 
@@ -614,7 +614,7 @@ def fig3_6():
     ax.set_ylabel('Precision  (Positive Predictive Value)',
                   fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_title(
-        'Figure 3.6: Precision-Recall Curve -- '
+        'Figure 7: Precision-Recall Curve -- '
         'AUPRC Conceptual Illustration\n'
         'Higher AUPRC = Better fraud detection under class imbalance',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
@@ -622,13 +622,13 @@ def fig3_6():
     ax.legend(loc='upper right', fontsize=11, framealpha=0.9,
               prop={'family': FONT_FAMILY})
     ax.set_facecolor('#FAFAFA')
-    save('fig3_6_auprc_concept')
+    save('fig7_auprc_concept')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 3.7  Accuracy Exclusion
+# FIGURE 8  Accuracy Exclusion
 # ══════════════════════════════════════════════════════════════
-def fig3_7():
+def fig8():
     fig, ax = plt.subplots(figsize=(10, 6))
     fig.patch.set_facecolor('white')
 
@@ -650,7 +650,7 @@ def fig3_7():
     ax.set_ylim(0, 1.22)
     ax.set_ylabel('Score', fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_title(
-        'Figure 3.7: Accuracy Exclusion Justification\n'
+        'Figure 8: Accuracy Exclusion Justification\n'
         'Degenerate Classifier -- '
         'Predicts "Legitimate" for Every Transaction',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
@@ -669,13 +669,13 @@ def fig3_7():
             fontsize=10.5, color='#B71C1C',
             fontstyle='italic', fontweight='bold',
             fontfamily=FONT_FAMILY)
-    save('fig3_7_accuracy_exclusion')
+    save('fig8_accuracy_exclusion')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.1  Local-Only Performance
+# FIGURE 9  Local-Only Performance
 # ══════════════════════════════════════════════════════════════
-def fig4_1():
+def fig9():
     blabels = ['Bank 1\n(High-Risk)',
                'Bank 2\n(Retail/\nBlind Spot)',
                'Bank 3\n(Mixed)']
@@ -727,18 +727,18 @@ def fig4_1():
                     fontfamily=FONT_FAMILY)
 
     fig.suptitle(
-        'Figure 4.1: Local-Only Baseline Performance -- '
+        'Figure 9: Local-Only Baseline Performance -- '
         'AUPRC and F1-Score\n'
         'Bank 2: AUPRC=0.5006 ~ random  |  '
         'F1=0.0000 = zero operational detection',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
-    save('fig4_1_local_only_performance')
+    save('fig9_local_only_performance')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.2  Centralized PR Curve
+# FIGURE 10  Centralized PR Curve
 # ══════════════════════════════════════════════════════════════
-def fig4_2():
+def fig10():
     fig, ax = plt.subplots(figsize=(9, 7))
     fig.patch.set_facecolor('white')
 
@@ -763,7 +763,7 @@ def fig4_2():
     ax.set_xlabel('Recall', fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_ylabel('Precision', fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_title(
-        'Figure 4.2: Precision-Recall Curve -- '
+        'Figure 10: Precision-Recall Curve -- '
         'Centralized Baseline\n'
         'Privacy-Violated Upper Bound  [!]  Not for deployment',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
@@ -771,13 +771,13 @@ def fig4_2():
     ax.legend(loc='upper right', fontsize=11,
               prop={'family': FONT_FAMILY})
     ax.set_facecolor('#FAFAFA')
-    save('fig4_2_centralized_pr_curve')
+    save('fig10_centralized_pr_curve')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.3  AUPRC Trajectory
+# FIGURE 11  AUPRC Trajectory
 # ══════════════════════════════════════════════════════════════
-def fig4_3():
+def fig11():
     fig, ax = plt.subplots(figsize=(12, 7))
     fig.patch.set_facecolor('white')
     markers = {'bank1':'o','bank2':'s','bank3':'^'}
@@ -807,7 +807,7 @@ def fig4_3():
                   fontfamily=FONT_FAMILY)
     ax.set_ylabel('AUPRC', fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_title(
-        'Figure 4.3: AUPRC Trajectory Across '
+        'Figure 11: AUPRC Trajectory Across '
         '5 Federated Communication Rounds\n'
         'Bank 2 recovers from 0.5006 (random) to 0.9830 -- '
         'achieved in Round 1',
@@ -821,13 +821,13 @@ def fig4_3():
     ax.legend(loc='lower right', fontsize=11, framealpha=0.9,
               prop={'family': FONT_FAMILY})
     ax.set_facecolor('#FAFAFA')
-    save('fig4_3_auprc_trajectory')
+    save('fig11_auprc_trajectory')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.4  F1-Score Trajectory
+# FIGURE 12  F1-Score Trajectory
 # ══════════════════════════════════════════════════════════════
-def fig4_4():
+def fig12():
     fig, ax = plt.subplots(figsize=(12, 7))
     fig.patch.set_facecolor('white')
     markers = {'bank1':'o','bank2':'s','bank3':'^'}
@@ -851,7 +851,7 @@ def fig4_4():
                   fontfamily=FONT_FAMILY)
     ax.set_ylabel('F1-Score', fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_title(
-        'Figure 4.4: F1-Score Trajectory Across '
+        'Figure 12: F1-Score Trajectory Across '
         '5 Federated Communication Rounds\n'
         'All banks converge to F1 = 0.8526 from Round 2 onward',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
@@ -864,13 +864,13 @@ def fig4_4():
     ax.legend(loc='lower right', fontsize=11, framealpha=0.9,
               prop={'family': FONT_FAMILY})
     ax.set_facecolor('#FAFAFA')
-    save('fig4_4_f1_trajectory')
+    save('fig12_f1_trajectory')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.5  Bank 2 Recovery
+# FIGURE 13  Bank 2 Recovery
 # ══════════════════════════════════════════════════════════════
-def fig4_5():
+def fig13():
     fig, axes = plt.subplots(1, 2, figsize=(14, 7))
     fig.patch.set_facecolor('white')
 
@@ -924,18 +924,18 @@ def fig4_5():
                                     lw=1.8))
 
     fig.suptitle(
-        'Figure 4.5: Bank 2 Blind Spot Resolution via '
+        'Figure 13: Bank 2 Blind Spot Resolution via '
         'Federated Learning\n'
         'AUPRC: 0.5006 -> 0.9830  |  '
         'F1: 0.0000 -> 0.8526  |  Achieved in Round 1',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
-    save('fig4_5_bank2_recovery')
+    save('fig13_bank2_recovery')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.6  Comparative Bar Chart
+# FIGURE 14  Comparative Bar Chart
 # ══════════════════════════════════════════════════════════════
-def fig4_6():
+def fig14():
     bw = 0.26
     x  = np.arange(3)
 
@@ -997,18 +997,18 @@ def fig4_6():
                                         color='#B71C1C', lw=1.8))
 
     fig.suptitle(
-        'Figure 4.6: AUPRC and F1-Score Comparison -- '
+        'Figure 14: AUPRC and F1-Score Comparison -- '
         'All Experimental Conditions\n'
         'Privacy Tax = 0.9976 - 0.9830 = 0.0146  '
         '(1.46% -- operationally negligible)',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
-    save('fig4_6_comparative_bar')
+    save('fig14_comparative_bar')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.7  Feature Importance
+# FIGURE 15  Feature Importance
 # ══════════════════════════════════════════════════════════════
-def fig4_7():
+def fig15():
     features = [
         'type_DEBIT',    'type_CASH_IN',  'type_PAYMENT',
         'step',          'oldbalanceDest','newbalanceDest',
@@ -1043,7 +1043,7 @@ def fig4_7():
     ax.set_xlabel('Feature Importance (Gain)', fontsize=12,
                   fontfamily=FONT_FAMILY)
     ax.set_title(
-        'Figure 4.7: XGBoost Feature Importance -- '
+        'Figure 15: XGBoost Feature Importance -- '
         'Federated Global Model (Round 5)\n'
         'errorBalanceOrig and errorBalanceDest dominate -- '
         'engineered features are critical',
@@ -1061,13 +1061,13 @@ def fig4_7():
     ]
     ax.legend(handles=patches, fontsize=10, loc='lower right',
               prop={'family': FONT_FAMILY})
-    save('fig4_7_feature_importance')
+    save('fig15_feature_importance')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 4.8  All PR Curves Overlaid
+# FIGURE 16  All PR Curves Overlaid
 # ══════════════════════════════════════════════════════════════
-def fig4_8():
+def fig16():
     fig, ax = plt.subplots(figsize=(11, 8))
     fig.patch.set_facecolor('white')
 
@@ -1103,7 +1103,7 @@ def fig4_8():
     ax.set_xlabel('Recall', fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_ylabel('Precision', fontsize=12, fontfamily=FONT_FAMILY)
     ax.set_title(
-        'Figure 4.8: Precision-Recall Curves -- '
+        'Figure 16: Precision-Recall Curves -- '
         'All Models Overlaid\n'
         'Federated model approaches centralized ceiling  |  '
         'Privacy Tax = 0.0146',
@@ -1112,13 +1112,13 @@ def fig4_8():
     ax.legend(loc='upper right', fontsize=9.5, framealpha=0.92,
               prop={'family': FONT_FAMILY})
     ax.set_facecolor('#FAFAFA')
-    save('fig4_8_all_pr_curves')
+    save('fig16_all_pr_curves')
 
 
 # ══════════════════════════════════════════════════════════════
-# FIGURE 5.1  Privacy Tax Trade-off
+# FIGURE 17  Privacy Tax Trade-off
 # ══════════════════════════════════════════════════════════════
-def fig5_1():
+def fig17():
     fig, axes = plt.subplots(1, 2, figsize=(13, 7))
     fig.patch.set_facecolor('white')
 
@@ -1165,11 +1165,11 @@ def fig5_1():
         ax.set_facecolor('#FAFAFA')
 
     fig.suptitle(
-        'Figure 5.1: Privacy-Performance Trade-off Analysis\n'
+        'Figure 17: Privacy-Performance Trade-off Analysis\n'
         'AUPRC Privacy Tax = 0.0146 (1.46%) -- '
         'Operationally Negligible',
         fontsize=12, fontweight='bold', fontfamily=FONT_FAMILY)
-    save('fig5_1_privacy_tax')
+    save('fig17_privacy_tax')
 
 
 # ══════════════════════════════════════════════════════════════
@@ -1183,23 +1183,23 @@ if __name__ == '__main__':
     print(f'  DPI         : {DPI}')
     print('=' * 60)
 
-    fig1_1()
-    fig3_1()
-    fig3_2()
-    fig3_3()
-    fig3_4()
-    fig3_5()
-    fig3_6()
-    fig3_7()
-    fig4_1()
-    fig4_2()
-    fig4_3()
-    fig4_4()
-    fig4_5()
-    fig4_6()
-    fig4_7()
-    fig4_8()
-    fig5_1()
+    fig1()
+    fig2()
+    fig3()
+    fig4()
+    fig5()
+    fig6()
+    fig7()
+    fig8()
+    fig9()
+    fig10()
+    fig11()
+    fig12()
+    fig13()
+    fig14()
+    fig15()
+    fig16()
+    fig17()
 
     figs = sorted(OUT.glob('*.png'))
     print('=' * 60)
