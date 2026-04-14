@@ -1,3 +1,6 @@
+# AI assistant context — local only
+CLAUDE.md
+
 # Data — never commit raw or processed data
 data/raw/
 data/processed/
